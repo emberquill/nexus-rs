@@ -66,6 +66,14 @@ impl<T> Event<T> {
         unsafe { event_subscribe_typed(self.identifier, callback) }
     }
 
+    /// Unsubscribes a previously registered event callback.
+    #[inline]
+    pub fn unsubscribe(&self, callback: RawEventConsume<T>) {
+        let callback =
+            unsafe { mem::transmute::<RawEventConsume<T>, RawEventConsumeUnknown>(callback) };
+        event_unsubscribe(self.identifier, callback)
+    }
+
     /// Raises the event.
     #[inline]
     pub fn raise(&self, event_data: &T) {

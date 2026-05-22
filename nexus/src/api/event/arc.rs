@@ -109,16 +109,28 @@ pub struct AgentUpdate {
 }
 
 impl AgentUpdate {
-    /// Returns the account name (if present).
+    /// Returns the account name as [`CStr`].
     #[inline]
-    pub fn account(&self) -> &CStr {
+    pub fn account_c(&self) -> &CStr {
         unsafe { CStr::from_ptr(self.account.as_ptr()) }
     }
 
-    /// Returns the character name.
+    /// Returns the account name as [`str`].
     #[inline]
-    pub fn character(&self) -> &CStr {
+    pub fn account(&self) -> Option<&str> {
+        self.account_c().to_str().ok()
+    }
+
+    /// Returns the character name as [`Cstr`].
+    #[inline]
+    pub fn character_c(&self) -> &CStr {
         unsafe { CStr::from_ptr(self.character.as_ptr()) }
+    }
+
+    /// Returns the character name as [`str`].
+    #[inline]
+    pub fn character(&self) -> Option<&str> {
+        self.character_c().to_str().ok()
     }
 
     /// Whether the agent has been added or removed.

@@ -1,7 +1,3 @@
 [workspace]
-members = [
-    "nexus",
-    "nexus_codegen",
-    "nexus_example_addon",
-]
-resolver = "2"
+members = ["nexus", "nexus_codegen", "nexus_example_addon"]
+resolver = "3"

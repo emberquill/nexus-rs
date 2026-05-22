@@ -1,30 +1,29 @@
 [package]
 name = "nexus"
-version = "0.11.0"
+version = "0.12.0"
 edition = "2024"
 authors = ["Zerthox"]
 description = "Rust bindings for Raidcore Nexus addons"
 repository = "https://github.com/zerthox/nexus-rs"
-rust-version = "1.85.0"
+rust-version = "1.87.0"
 
 [dependencies]
 bitfields = { version = "1.0.0", optional = true }
 bitflags = "2.4.2"
-gw2_mumble = { git = "https://github.com/zerthox/gw2-mumble-rs", tag = "0.3.0", optional = true }
+gw2_mumble = { git = "https://github.com/zerthox/gw2-mumble-rs", optional = true }
 log = { version = "0.4.21", features = ["std"], optional = true }
-env_filter = { version = "0.1.2", optional = true }
+env_filter = { version = "1.0.1", optional = true }
 nexus_codegen = { path = "../nexus_codegen" }
 num_enum = "0.7.2"
 paste = "1.0.14"
 retour = { version = "0.3.1", optional = true }
 serde = { version = "1.0.197", features = ["derive"], optional = true }
-strum = { version = "0.27.1", features = ["derive"], optional = true }
+strum = { version = "0.28.0", features = ["derive"], optional = true }
+unofficial_extras = { git = "https://github.com/zerthox/arcdps-rs", optional = true }
 
-[dependencies.arcdps]
+[dependencies.evtc]
 git = "https://github.com/zerthox/arcdps-rs"
-tag = "0.22.0"
-default-features = false
-features = ["unwind"]
+features = ["realtime"]
 optional = true
 
 [dependencies.imgui]
@@ -38,10 +37,10 @@ features = ["System", "Win32_Graphics_Dxgi", "Win32_Graphics_Direct3D11"]
 
 [features]
 default = ["panic", "panic_trace", "panic_msgbox"]
-arc = ["dep:arcdps"]
+arc = ["dep:evtc"]
 arcdps = ["arc"]
 evtc = ["arc"]
-extras = ["dep:arcdps", "arcdps/extras"]
+extras = ["dep:unofficial_extras"]
 hook = ["dep:retour"]
 log = ["dep:log"]
 log_filter = ["log", "dep:env_filter", "nexus_codegen/log_filter"]
@@ -53,3 +52,4 @@ panic_msgbox = ["panic", "windows/Win32_UI_WindowsAndMessaging"]
 rtapi = ["dep:bitfields"]
 serde = ["dep:serde", "bitflags/serde", "gw2_mumble/serde"]
 strum = ["dep:strum"]
+unofficial_extras = ["extras"]

@@ -1,8 +1,10 @@
 //! [ArcDPS EVTC](https://deltaconnected.com/arcdps/) bridge events.
 
 use super::Event;
-use arcdps::evtc::{self, Agent};
+use evtc::agent::realtime::Agent;
 use std::ffi::{CStr, c_char};
+
+pub use evtc;
 
 /// ArcDPS EVTC combat local event.
 pub const COMBAT_LOCAL: Event<CombatData> =
@@ -145,11 +147,13 @@ pub struct CombatData {
     event: *const evtc::Event,
     src: *const Agent,
     dst: *const Agent,
+    skill_name: *const c_char,
     pub id: u64,
     pub rev: u64,
 }
 
 impl CombatData {
+    /// Returns the combat data as tuple.
     #[inline]
     pub fn as_tuple(
         &self,
@@ -169,7 +173,7 @@ impl CombatData {
         self.event
     }
 
-    /// Returns the [`Event`].
+    /// Returns the [`Event`](evtc::Event).
     #[inline]
     pub fn event(&self) -> Option<&evtc::Event> {
         unsafe { self.event.as_ref() }
@@ -181,7 +185,7 @@ impl CombatData {
         self.src
     }
 
-    /// Returns the [`Event`].
+    /// Returns the source [`Agent`].
     #[inline]
     pub fn src(&self) -> Option<&Agent> {
         unsafe { self.src.as_ref() }
@@ -197,5 +201,11 @@ impl CombatData {
     #[inline]
     pub fn dst(&self) -> Option<&Agent> {
         unsafe { self.dst.as_ref() }
+    }
+
+    /// Returns the skill name as [`CStr`].
+    #[inline]
+    pub fn skill_name(&self) -> Option<&CStr> {
+        (!self.skill_name.is_null()).then(|| unsafe { CStr::from_ptr(self.skill_name) })
     }
 }

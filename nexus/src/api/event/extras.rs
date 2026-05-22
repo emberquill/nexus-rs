@@ -1,13 +1,9 @@
 //! [Unofficial Extras](https://github.com/Krappa322/arcdps_unofficial_extras_releases) bridge events.
 
 use super::Event;
-use arcdps::{
-    Language,
-    extras::{
-        UserInfo, UserInfoIter, keybinds::RawKeybindChange, message::SquadMessage,
-        user::to_user_info_iter,
-    },
-};
+use unofficial_extras::{keybinds::RawKeybindChange, user::to_user_info_iter};
+
+pub use unofficial_extras::*;
 
 /// Unofficial Extras squad update event.
 pub const EXTRAS_SQUAD_UPDATE: Event<SquadUpdate> =

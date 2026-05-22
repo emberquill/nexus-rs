@@ -205,7 +205,13 @@ impl CombatData {
 
     /// Returns the skill name as [`CStr`].
     #[inline]
-    pub fn skill_name(&self) -> Option<&CStr> {
+    pub fn skill_name_c(&self) -> Option<&CStr> {
         (!self.skill_name.is_null()).then(|| unsafe { CStr::from_ptr(self.skill_name) })
+    }
+
+    /// Returns the skill name as [`str`].
+    #[inline]
+    pub fn skill_name(&self) -> Option<&str> {
+        self.skill_name_c()?.to_str().ok()
     }
 }

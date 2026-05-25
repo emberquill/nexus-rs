@@ -17,7 +17,7 @@ nexus::export! {
     load,
     unload,
     flags: AddonFlags::None,
-    provider: UpdateProvider::GitHub,
+    provider: UpdateProvider::GitHub, // provider github populates missing update link from Cargo.toml repository
     update_link: "https://github.com/zerthox/nexus-rs",
     log_filter: "debug"
 }

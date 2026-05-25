@@ -86,4 +86,11 @@ pub mod __macro {
         globals::{deinit, init, with_ui},
         util::str_from_c,
     };
+
+    use crate::UpdateProvider;
+
+    #[inline]
+    pub const fn use_repository(provider: UpdateProvider) -> bool {
+        matches!(provider, UpdateProvider::GitHub)
+    }
 }

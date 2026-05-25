@@ -104,7 +104,23 @@ impl AddonInfo {
         self.update_link
             .as_ref()
             .map(as_char_ptr)
-            .unwrap_or_else(|| quote! { ::std::ptr::null() })
+            .unwrap_or_else(|| {
+                let repo = env_var("CARGO_PKG_REPOSITORY");
+                if let Some(provider) = &self.provider
+                    && !repo.is_empty()
+                {
+                    let link = as_char_ptr(repo);
+                    quote! {{
+                        if ::nexus::__macro::use_repository(#provider) {
+                            #link
+                        } else {
+                            ::std::ptr::null()
+                        }
+                    }}
+                } else {
+                    quote! { ::std::ptr::null() }
+                }
+            })
     }
 
     pub fn generate_export(&self) -> TokenStream {
@@ -115,11 +131,11 @@ impl AddonInfo {
         let description = as_char_ptr(env_var("CARGO_PKG_DESCRIPTION"));
         let version = self.generate_version();
 
-        #[cfg(feature = "log_filter")]
-        let log_filter = self.generate_log_filter();
-
-        #[cfg(not(feature = "log_filter"))]
-        let log_filter = quote! { ::std::option::Option::None };
+        let log_filter = if cfg!(feature = "log_filter") {
+            self.generate_log_filter()
+        } else {
+            quote! { ::std::option::Option::None }
+        };
 
         let load = self.generate_load();
         let unload = self.generate_unload();

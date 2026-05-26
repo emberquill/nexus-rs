@@ -131,11 +131,11 @@ impl AddonInfo {
         let description = as_char_ptr(env_var("CARGO_PKG_DESCRIPTION"));
         let version = self.generate_version();
 
-        let log_filter = if cfg!(feature = "log_filter") {
-            self.generate_log_filter()
-        } else {
-            quote! { ::std::option::Option::None }
-        };
+        #[cfg(feature = "log_filter")]
+        let log_filter = self.generate_log_filter();
+
+        #[cfg(not(feature = "log_filter"))]
+        let log_filter = quote! { ::std::option::Option::None };
 
         let load = self.generate_load();
         let unload = self.generate_unload();

@@ -20,12 +20,12 @@ pub struct NexusLogger {
 }
 
 impl NexusLogger {
-    pub fn set_logger(channel_name: &'static str, filter: Option<&'static str>) {
+    pub fn set_logger(channel_name: &'static str, _filter: Option<&'static str>) {
         #[cfg(not(feature = "log_filter"))]
         let logger = Self { channel_name };
 
         #[cfg(feature = "log_filter")]
-        let logger = filter::NexusLoggerFiltered::new(channel_name, filter);
+        let logger = filter::NexusLoggerFiltered::new(channel_name, _filter);
 
         let _ = log::set_boxed_logger(Box::new(logger));
         log::set_max_level(log::LevelFilter::Trace);

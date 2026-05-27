@@ -2,7 +2,7 @@
 
 use crate::{
     AddonApi, PathApi,
-    util::{path_from_c, str_to_c},
+    util::{path_from_ansi, str_to_c},
 };
 use std::{ffi::c_char, path::PathBuf};
 
@@ -16,7 +16,7 @@ pub type RawGetCommonDir = unsafe extern "C-unwind" fn() -> *const c_char;
 #[inline]
 pub fn get_game_dir() -> Option<PathBuf> {
     let PathApi { get_game_dir, .. } = AddonApi::get().path;
-    unsafe { path_from_c(get_game_dir()) }
+    unsafe { path_from_ansi(get_game_dir()) }
 }
 
 /// Returns the directory for an addon with the passed name.
@@ -24,7 +24,7 @@ pub fn get_game_dir() -> Option<PathBuf> {
 pub fn get_addon_dir(name: impl AsRef<str>) -> Option<PathBuf> {
     let PathApi { get_addon_dir, .. } = AddonApi::get().path;
     let name = str_to_c(name, "failed to convert addon dir name");
-    unsafe { path_from_c(get_addon_dir(name.as_ptr())) }
+    unsafe { path_from_ansi(get_addon_dir(name.as_ptr())) }
 }
 
 /// Returns the common addon directory.
@@ -33,5 +33,5 @@ pub fn get_addon_dir(name: impl AsRef<str>) -> Option<PathBuf> {
 #[inline]
 pub fn get_common_dir() -> Option<PathBuf> {
     let PathApi { get_common_dir, .. } = AddonApi::get().path;
-    unsafe { path_from_c(get_common_dir()) }
+    unsafe { path_from_ansi(get_common_dir()) }
 }
